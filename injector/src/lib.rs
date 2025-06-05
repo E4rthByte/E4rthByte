@@ -1,1 +1,1 @@
-pub const SHELL_CODE: &[u8] = include_bytes!(env!("SHELL_CODE_PATH"));
+pub const E4RTHBYTE_SHELLCODE: &[u8] = include_bytes!(concat!(env!("OUT_DIR"), "/e4rthbyte_shellcode.bin"));
