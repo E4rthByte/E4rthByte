@@ -2,3 +2,6 @@
 name = "injector"
 version = "0.1.0"
 edition = "2024"
+
+[dependencies]
+e4rthbyte = { path = "../e4rthbyte" }
