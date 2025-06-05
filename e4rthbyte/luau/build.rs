@@ -1,6 +1,3 @@
-use std::path::Path;
-use glob::GlobResult;
-
 fn main() {
     let mut builder = base_builder();
 

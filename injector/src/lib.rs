@@ -1,0 +1,1 @@
+pub const E4RTHBYTE_DLL_PATH: &[u8] = include_bytes!(env!("E4RTHBYTE_DLL_PATH"));
