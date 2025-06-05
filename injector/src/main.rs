@@ -76,7 +76,6 @@ fn main() {
             roblox_pid)
         else {
             error!("Failed to open process");
-            unreachable!()
         };
 
         let buffer = E4RTHBYTE_SHELLCODE;
