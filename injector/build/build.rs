@@ -14,6 +14,8 @@ fn main() {
         panic!("e4rthbyte.dll not found in {}", e4rthbyte_dll_path.display());
     }
     
+    println!("cargo:rerun-if-changed={}", e4rthbyte_dll_path.to_str().unwrap());
+    
     let output = out_dir.join("e4rthbyte_shellcode.bin");
     
     let status = Command::new("build/donut.exe")

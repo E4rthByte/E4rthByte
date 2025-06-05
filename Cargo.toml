@@ -3,5 +3,7 @@ resolver = "3"
 members = [
     "e4rthbyte",
     "injector",
-    "e4rthbyte/luau"
+    "e4rthbyte/luau",
+    "e4rthbyte/offsets",
+    "e4rthbyte/rbxapi",
 ]
