@@ -1,5 +1,5 @@
-use injector::E4RTHBYTE_DLL_PATH;
+use injector::E4RTHBYTE_DLL;
 
 fn main() {
-    println!("{:?}", E4RTHBYTE_DLL_PATH)
+    println!("{:?}", E4RTHBYTE_DLL)
 }
