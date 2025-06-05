@@ -1,12 +1,6 @@
-[package]
-authors = ["sqlerrorthing", "b2nzy"]
-repository = "https://github.com/E4rthByte/E4rthByte"
-name = "E4rthByte"
-version = "0.1.0"
-edition = "2024"
-
 [workspace]
-members = ["luau"]
-
-[dependencies]
-luau = { path = "luau" }
+members = [
+    "e4rthbyte",
+    "injector",
+    "e4rthbyte/luau"
+]
