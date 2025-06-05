@@ -2,6 +2,32 @@ use std::ffi::CString;
 use std::mem::zeroed;
 use crate::raw::luacode::{lua_CompileOptions, luau_compile as raw_luau_compile};
 
+/// Compiles Lua source code into Luau bytecode using the underlying FFI binding to `luau_compile`.
+///
+/// This function acts as a safe wrapper around the FFI `luau_compile` function.
+/// It takes a string-like input 
+/// representing the Lua source code and attempts to compile it into Luau bytecode.
+///
+/// # Parameters
+///
+/// - `source`: A string with the Lua source code to compile.
+///
+/// # Returns
+///
+/// - `Ok(Vec<u8>)` containing the compiled Luau bytecode on success.
+/// - `Err(String)` containing the compilation error message on failure.
+///
+/// # Example
+///
+/// ```rust
+/// use luau::luacode::luau_compile;
+/// 
+/// let source = "print('Hello, world!')";
+/// assert!(luau_compile(source).is_ok());
+/// 
+/// let source = "print('syntax erro";
+/// assert!(luau_compile(source).is_err());
+/// ```
 pub fn luau_compile<S>(source: S) -> Result<Vec<u8>, String>
 where
     S: AsRef<str>
