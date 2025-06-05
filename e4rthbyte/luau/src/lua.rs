@@ -2,7 +2,7 @@ use std::ffi::CString;
 use std::os::raw::c_int;
 use crate::raw::lua::{lua_State, lua_pushcclosurek, lua_setfield, LUA_GLOBALSINDEX};
 
-pub fn lua_pushcfunction<S, F>(
+pub fn lua_pushcfunction<S>(
     state: &mut Box<lua_State>, 
     func: unsafe extern "C" fn(*mut lua_State) -> c_int,
     debug_name: S
@@ -39,4 +39,16 @@ where
             name.as_ptr()
         )
     }
+}
+
+pub fn register_func<S>(
+    state: &mut Box<lua_State>,
+    func: unsafe extern "C" fn(*mut lua_State) -> c_int,
+    name: S
+)
+where
+    S: AsRef<str>
+{
+    lua_pushcfunction(state, func, name.as_ref());
+    lua_setglobal(state, name.as_ref());
 }
