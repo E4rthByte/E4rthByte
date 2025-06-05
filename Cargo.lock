@@ -15,6 +15,7 @@ dependencies = [
 name = "e4rthbyte"
 version = "0.1.0"
 dependencies = [
+ "offsets",
  "windows",
 ]
 
@@ -38,6 +39,10 @@ dependencies = [
  "cc",
  "glob",
 ]
+
+[[package]]
+name = "offsets"
+version = "0.1.0"
 
 [[package]]
 name = "proc-macro2"
