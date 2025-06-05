@@ -1,4 +1,4 @@
-injector:
-    cargo clean --package injector
+run package:
+    cargo clean --package {{package}}
     cargo build -p e4rthbyte
-    cargo run injector
+    cargo run -p {{package}}
