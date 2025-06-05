@@ -2,4 +2,5 @@
 members = [
     "e4rthbyte",
     "injector",
+    "e4rthbyte/luau"
 ]
