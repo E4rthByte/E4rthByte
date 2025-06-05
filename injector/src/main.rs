@@ -1,5 +1,4 @@
 use std::ffi::{c_void, CStr};
-use std::mem;
 use std::mem::{transmute, zeroed};
 use std::process::exit;
 use std::thread::sleep;
@@ -12,7 +11,6 @@ use windows::{
     Win32::System::Threading::{OpenProcess, CreateRemoteThread, LPTHREAD_START_ROUTINE, PROCESS_ALL_ACCESS},
     Win32::System::Memory::{VirtualAllocEx, MEM_COMMIT, MEM_RESERVE, PAGE_EXECUTE_READWRITE}
 };
-use windows::core::BOOL;
 
 macro_rules! msg {
     ($($arg:tt)*) => {{
@@ -30,26 +28,29 @@ macro_rules! error {
     }};
 }
 
-fn get_roblox_pid() -> u32 {
+fn get_roblox_pid() -> Option<u32> {
     unsafe {
-        let mut pid = 0;
-
         let Ok(h_snapshot) = CreateToolhelp32Snapshot(
             TH32CS_SNAPPROCESS,
-            0)
-        else {
-            error!("Failed to create snapshot")
+            0
+        ) else {
+            return None
         };
 
-        let mut pe: PROCESSENTRY32 = zeroed();
-        pe.dwSize = size_of::<PROCESSENTRY32>() as u32;
+        let mut pe = PROCESSENTRY32 {
+            dwSize: size_of::<PROCESSENTRY32>() as _,
+            ..zeroed()
+        };
 
         let mut success = Process32First(h_snapshot, &mut pe);
 
         while success.is_ok() {
-            if CStr::from_ptr(pe.szExeFile.as_ptr()).to_string_lossy().eq_ignore_ascii_case("RobloxStudioBeta.exe") {
-                pid = pe.th32ProcessID;
-                break;
+            let exe_name = CStr::from_ptr(pe.szExeFile.as_ptr())
+                .to_string_lossy();
+            
+            if exe_name.eq_ignore_ascii_case("RobloxStudioBeta.exe") {
+                let _ = CloseHandle(h_snapshot);
+                return Some(pe.th32ProcessID);
             }
 
             success = Process32Next(h_snapshot, &mut pe);
@@ -57,17 +58,15 @@ fn get_roblox_pid() -> u32 {
 
         let _ = CloseHandle(h_snapshot);
 
-        pid
+        None
     }
 }
 
 fn main() {
     unsafe {
-        let roblox_pid = get_roblox_pid();
-
-        if roblox_pid == 0 {
+        let Some(roblox_pid) = get_roblox_pid() else {
             error!("Roblox not found!");
-        }
+        };
 
         msg!("PID: {}", roblox_pid);
 
@@ -98,8 +97,8 @@ fn main() {
 
         if WriteProcessMemory(
             h_process, address, buffer.as_ptr() as _,
-            buffer_size, Some(&mut 0)).is_err() 
-        {
+            buffer_size, Some(&mut 0)
+        ).is_err() {
             let _ = CloseHandle(h_process);
             error!("Failed to write to process");
         }
