@@ -1,5 +1,6 @@
 use std::ffi::{c_void, CStr};
 use std::mem;
+use std::mem::zeroed;
 use std::process::exit;
 use std::thread::sleep;
 use std::time::Duration;
@@ -12,14 +13,20 @@ use windows::{
     Win32::System::Memory::{VirtualAllocEx, MEM_COMMIT, MEM_RESERVE, PAGE_EXECUTE_READWRITE}
 };
 
-fn error(msg: &str) {
-    println!("[-] {}, exiting in 3s", msg);
-    sleep(Duration::from_secs(3));
-    exit(1);
+macro_rules! msg {
+    ($($arg:tt)*) => {{
+        let msg = format!($($arg)*);
+        println!("[+] {}", msg);
+    }};
 }
 
-fn msg(msg: &str) {
-    println!("[+] {}", msg);
+macro_rules! error {
+    ($($arg:tt)*) => {{
+        let msg = format!($($arg)*);
+        println!("[-] {}, exiting in 3s", msg);
+        sleep(Duration::from_secs(3));
+        exit(1);
+    }};
 }
 
 fn get_roblox_pid() -> u32 {
@@ -30,12 +37,11 @@ fn get_roblox_pid() -> u32 {
             TH32CS_SNAPPROCESS,
             0)
         else {
-            error("Failed to create snapshot");
-            unreachable!();
+            error!("Failed to create snapshot")
         };
 
-        let mut pe: PROCESSENTRY32 = std::mem::zeroed();
-        pe.dwSize = std::mem::size_of::<PROCESSENTRY32>() as u32;
+        let mut pe: PROCESSENTRY32 = zeroed();
+        pe.dwSize = size_of::<PROCESSENTRY32>() as u32;
 
         let mut success = Process32First(h_snapshot, &mut pe);
 
@@ -50,7 +56,7 @@ fn get_roblox_pid() -> u32 {
 
         let _ = CloseHandle(h_snapshot);
 
-        return pid;
+        pid
     }
 }
 
@@ -59,24 +65,24 @@ fn main() {
         let roblox_pid = get_roblox_pid();
 
         if roblox_pid == 0 {
-            error("Roblox not found!");
+            error!("Roblox not found!");
         }
 
-        msg(format!("PID: {}", roblox_pid).as_str());
+        msg!("PID: {}", roblox_pid);
 
         let Ok(h_process) = OpenProcess(
             PROCESS_ALL_ACCESS,
             bool::from(FALSE),
             roblox_pid)
         else {
-            error("Failed to open process");
+            error!("Failed to open process");
             unreachable!()
         };
 
         let buffer = E4RTHBYTE_SHELLCODE;
         let buffer_size: usize = buffer.len();
 
-        msg(format!("Buffer size: {}", buffer_size).as_str());
+        msg!("Buffer size: {}", buffer_size);
 
         let address = VirtualAllocEx(
             h_process, None, buffer_size,
@@ -85,19 +91,19 @@ fn main() {
 
         if address.is_null() {
             let _ = CloseHandle(h_process);
-            error("Failed to allocate memory");
+            error!("Failed to allocate memory");
         }
 
-        msg(format!("Memory allocated, address: {:?}", address).as_str());
+        msg!("Memory allocated, address: {:?}", address);
 
         if WriteProcessMemory(
             h_process, address, buffer.as_ptr() as _,
             buffer_size, Some(&mut 0)).is_err() {
             let _ = CloseHandle(h_process);
-            error("Failed to write to process");
+            error!("Failed to write to process");
         }
         
-        msg("Memory wrote!");
+        msg!("Memory wrote!");
 
         if CreateRemoteThread(
             h_process, None, 0,
@@ -105,10 +111,10 @@ fn main() {
             None, 0, None
         ).is_err() {
             let _ = CloseHandle(h_process);
-            error("Failed to create remote thread");
+            error!("Failed to create remote thread");
         }
         
-        msg("Injected!");
+        msg!("Injected!");
         
         let _ = CloseHandle(h_process);
     }
