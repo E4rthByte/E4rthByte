@@ -1,6 +1,5 @@
 use std::ffi::CString;
 use std::mem::zeroed;
-use std::slice;
 use crate::raw::luacode::{lua_CompileOptions, luau_compile as raw_luau_compile};
 
 pub fn luau_compile<S>(source: S) -> Result<Vec<u8>, String>
@@ -26,7 +25,7 @@ where
         );
 
         let out = Vec::from_raw_parts(bytecode_ptr as *mut u8, out_size, out_size);
-        if let Ok(err) = String::from_utf8(out.clone()) {
+        if out_size > 0 && out[0] == 0 && let Ok(err) = String::from_utf8(out.clone()) {
             Err(err)
         } else {
             Ok(out)
