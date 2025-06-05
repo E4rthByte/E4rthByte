@@ -1,6 +1,6 @@
 use injector::{error, get_pid, msg, E4RTHBYTE_SHELLCODE};
-use std::ffi::{c_void, CStr};
-use std::mem::{transmute, zeroed};
+use std::ffi::c_void;
+use std::mem::transmute;
 use windows::Win32::Foundation::{CloseHandle, FALSE};
 use windows::Win32::System::Diagnostics::Debug::WriteProcessMemory;
 use windows::Win32::System::Threading::{CreateRemoteThread, OpenProcess, LPTHREAD_START_ROUTINE, PROCESS_ALL_ACCESS};
