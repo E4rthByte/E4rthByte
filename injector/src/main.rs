@@ -1,5 +1,5 @@
-use injector::E4RTHBYTE_DLL;
+use injector::E4RTHBYTE_SHELLCODE;
 
 fn main() {
-    println!("{:?}", E4RTHBYTE_DLL)
+    println!("{:?}", E4RTHBYTE_SHELLCODE)
 }
