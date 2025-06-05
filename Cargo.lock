@@ -15,6 +15,7 @@ dependencies = [
 name = "e4rthbyte"
 version = "0.1.0"
 dependencies = [
+ "luau",
  "rbxapi",
 ]
 

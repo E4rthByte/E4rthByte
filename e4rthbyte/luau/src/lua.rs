@@ -3,7 +3,7 @@ use std::os::raw::c_int;
 use crate::raw::lua::{lua_State, lua_pushcclosurek, lua_setfield, LUA_GLOBALSINDEX};
 
 pub fn lua_pushcfunction<S>(
-    state: &mut Box<lua_State>, 
+    state: *mut lua_State, 
     func: unsafe extern "C" fn(*mut lua_State) -> c_int,
     debug_name: S
 ) 
@@ -14,7 +14,7 @@ where
     
     unsafe {
         lua_pushcclosurek(
-            state.as_mut() as _,
+            state,
             Some(func),
             debug_name.as_ptr(),
             0,
@@ -24,7 +24,7 @@ where
 }
 
 pub fn lua_setglobal<S>(
-    state: &mut Box<lua_State>,
+    state: *mut lua_State,
     name: S
 )
 where 
@@ -34,7 +34,7 @@ where
     
     unsafe {
         lua_setfield(
-            state.as_mut() as _,
+            state,
             LUA_GLOBALSINDEX,
             name.as_ptr()
         )
@@ -42,7 +42,7 @@ where
 }
 
 pub fn register_func<S>(
-    state: &mut Box<lua_State>,
+    state: *mut lua_State,
     func: unsafe extern "C" fn(*mut lua_State) -> c_int,
     name: S
 )
