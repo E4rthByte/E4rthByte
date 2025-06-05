@@ -11,7 +11,7 @@ cargo install bindgen-cli
 #### Update the bindings
 ```shell
 cd luau
-bindgen luau/VM/include/lua.h -o src/lua.rs
+bindgen luau/Compiler/include/luacode.h -o src/raw/luacode.rs
 ```
 
 #### Add for each rust file with bindings the prelude

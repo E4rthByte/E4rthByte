@@ -9,3 +9,4 @@ edition = "2024"
 members = ["luau"]
 
 [dependencies]
+luau = { path = "luau" }
