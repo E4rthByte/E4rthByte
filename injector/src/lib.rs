@@ -1,1 +1,1 @@
-pub const E4RTHBYTE_DLL: &[u8] = include_bytes!(env!("E4RTHBYTE_DLL_PATH"));
+pub const SHELL_CODE: &[u8] = include_bytes!(env!("SHELL_CODE_PATH"));
