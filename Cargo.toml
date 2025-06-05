@@ -6,4 +6,5 @@ members = [
     "e4rthbyte/luau",
     "e4rthbyte/offsets",
     "e4rthbyte/rbxapi",
+    "e4rthbyte/unc",
 ]
