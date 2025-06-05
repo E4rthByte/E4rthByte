@@ -3,4 +3,8 @@ name = "e4rthbyte"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+crate-type = ["cdylib"]
+
 [dependencies]
+windows-sys = { version = "0.59.0", features = ["Win32_UI_WindowsAndMessaging"] }
