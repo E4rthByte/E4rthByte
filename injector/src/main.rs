@@ -1,6 +1,6 @@
 use std::ffi::{c_void, CStr};
 use std::mem;
-use std::mem::zeroed;
+use std::mem::{transmute, zeroed};
 use std::process::exit;
 use std::thread::sleep;
 use std::time::Duration;
@@ -12,6 +12,7 @@ use windows::{
     Win32::System::Threading::{OpenProcess, CreateRemoteThread, LPTHREAD_START_ROUTINE, PROCESS_ALL_ACCESS},
     Win32::System::Memory::{VirtualAllocEx, MEM_COMMIT, MEM_RESERVE, PAGE_EXECUTE_READWRITE}
 };
+use windows::core::BOOL;
 
 macro_rules! msg {
     ($($arg:tt)*) => {{
@@ -72,14 +73,14 @@ fn main() {
 
         let Ok(h_process) = OpenProcess(
             PROCESS_ALL_ACCESS,
-            bool::from(FALSE),
+            FALSE.as_bool(),
             roblox_pid)
         else {
             error!("Failed to open process");
         };
 
         let buffer = E4RTHBYTE_SHELLCODE;
-        let buffer_size: usize = buffer.len();
+        let buffer_size = buffer.len();
 
         msg!("Buffer size: {}", buffer_size);
 
@@ -97,7 +98,8 @@ fn main() {
 
         if WriteProcessMemory(
             h_process, address, buffer.as_ptr() as _,
-            buffer_size, Some(&mut 0)).is_err() {
+            buffer_size, Some(&mut 0)).is_err() 
+        {
             let _ = CloseHandle(h_process);
             error!("Failed to write to process");
         }
@@ -106,7 +108,7 @@ fn main() {
 
         if CreateRemoteThread(
             h_process, None, 0,
-            mem::transmute::<*mut c_void, LPTHREAD_START_ROUTINE>(address),
+            transmute::<*mut c_void, LPTHREAD_START_ROUTINE>(address),
             None, 0, None
         ).is_err() {
             let _ = CloseHandle(h_process);
