@@ -7,4 +7,4 @@ edition = "2024"
 crate-type = ["cdylib"]
 
 [dependencies]
-windows = { version = "0.61.1", features = ["Win32_System_LibraryLoader", "Win32_System_Threading"] }
+rbxapi = { path = "rbxapi" }
