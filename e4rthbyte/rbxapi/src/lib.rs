@@ -7,7 +7,7 @@ pub mod api;
 /// Creating bindings to Roblox functions through a Rust wrapper.
 ///
 /// #### Simple Function
-/// ```rust
+/// ```_rust
 /// use rbxapi::api;
 /// use offsets::roblox::{GETTASKSCHEDULER_ADDR, PRINT_ADDR};
 /// use std::ffi::{c_char, c_double, CString};
@@ -23,7 +23,7 @@ pub mod api;
 /// #### Function with Data Transformation
 /// Sometimes, you need different input parameters in the Rust function than those in the actual C function.
 /// For this, the `api!` macro accepts two more arguments: `signature` and `call`.
-/// ```rust
+/// ```_rust
 /// api!(
 ///     ...
 ///     fn(format: u32, msg: &str) -> i64;
@@ -77,7 +77,7 @@ macro_rules! api {
             }
         }
     };
-    
+
     (
         $name:ident,
         $addr:expr,
@@ -94,7 +94,7 @@ macro_rules! api {
             }
         }
     };
-    
+
 }
 
 pub fn resolve_func_addr(name: &str, addr: usize) -> usize {
