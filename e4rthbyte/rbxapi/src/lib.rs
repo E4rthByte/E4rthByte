@@ -53,7 +53,7 @@ macro_rules! api {
     ) => {
         pub fn $name($($arg: $arg_ty),*) -> $ret {
             unsafe {
-                let func_addr = $crate:resolve_func_addrr(stringify!($name), $addr);
+                let func_addr = $crate::resolve_addr(stringify!($name), $addr);
                 let func: unsafe extern "cdecl" fn($($arg_ty),*) -> $ret = ::core::mem::transmute(func_addr);
                 func($($arg),*)
             }
@@ -69,7 +69,7 @@ macro_rules! api {
     ) => {
         pub fn $name($($outer_arg: $outer_ty),*) -> $ret {
             unsafe {
-                let func_addr = $crate:resolve_func_addrr(stringify!($name), $addr);
+                let func_addr = $crate::resolve_addr(stringify!($name), $addr);
                 let $func: unsafe extern "cdecl" fn($($arg_ty),*) -> $ret = ::core::mem::transmute(func_addr);
 
                 $call_block
@@ -86,7 +86,7 @@ macro_rules! api {
     ) => {
         pub fn $name($($outer_arg: $outer_ty),*) -> $ret {
             unsafe {
-                let func_addr = $crate:resolve_func_addrr(stringify!($name), $addr);
+                let func_addr = $crate::resolve_addr(stringify!($name), $addr);
                 let $func: unsafe extern "cdecl" fn($($arg_ty),*, ...) -> $ret = ::core::mem::transmute(func_addr);
 
                 $call_block
