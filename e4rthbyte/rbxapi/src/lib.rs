@@ -1,4 +1,3 @@
-use std::ffi::c_double;
 use windows::core::PCSTR;
 use windows::Win32::System::LibraryLoader::GetModuleHandleA;
 
@@ -54,7 +53,7 @@ macro_rules! api {
     ) => {
         pub fn $name($($arg: $arg_ty),*) -> $ret {
             unsafe {
-                let func_addr = $crate::resolve_func_addr(stringify!($name), $addr);
+                let func_addr = $crate:resolve_func_addrr(stringify!($name), $addr);
                 let func: unsafe extern "cdecl" fn($($arg_ty),*) -> $ret = ::core::mem::transmute(func_addr);
                 func($($arg),*)
             }
@@ -70,7 +69,7 @@ macro_rules! api {
     ) => {
         pub fn $name($($outer_arg: $outer_ty),*) -> $ret {
             unsafe {
-                let func_addr = $crate::resolve_func_addr(stringify!($name), $addr);
+                let func_addr = $crate:resolve_func_addrr(stringify!($name), $addr);
                 let $func: unsafe extern "cdecl" fn($($arg_ty),*) -> $ret = ::core::mem::transmute(func_addr);
 
                 $call_block
@@ -87,7 +86,7 @@ macro_rules! api {
     ) => {
         pub fn $name($($outer_arg: $outer_ty),*) -> $ret {
             unsafe {
-                let func_addr = $crate::resolve_func_addr(stringify!($name), $addr);
+                let func_addr = $crate:resolve_func_addrr(stringify!($name), $addr);
                 let $func: unsafe extern "cdecl" fn($($arg_ty),*, ...) -> $ret = ::core::mem::transmute(func_addr);
 
                 $call_block
@@ -97,7 +96,7 @@ macro_rules! api {
 
 }
 
-pub fn resolve_func_addr(name: &str, addr: usize) -> usize {
+pub fn resolve_addr(name: &str, addr: usize) -> usize {
     unsafe {
         let Ok(base) = GetModuleHandleA(PCSTR(::core::ptr::null())) else {
             panic!(
