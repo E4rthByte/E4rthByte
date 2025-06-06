@@ -1,6 +1,3 @@
-use windows::core::PCSTR;
-use windows::Win32::System::LibraryLoader::GetModuleHandleA;
-
 pub mod api;
 
 /// Creating bindings to Roblox functions through a Rust wrapper.
@@ -53,7 +50,7 @@ macro_rules! api {
     ) => {
         pub fn $name($($arg: $arg_ty),*) -> $ret {
             unsafe {
-                let func_addr = $crate::resolve_addr(stringify!($name), $addr);
+                let func_addr = $crate::resolve_addr!($name, $addr);
                 let func: unsafe extern "cdecl" fn($($arg_ty),*) -> $ret = ::core::mem::transmute(func_addr);
                 func($($arg),*)
             }
@@ -69,7 +66,7 @@ macro_rules! api {
     ) => {
         pub fn $name($($outer_arg: $outer_ty),*) -> $ret {
             unsafe {
-                let func_addr = $crate::resolve_addr(stringify!($name), $addr);
+                let func_addr = $crate::resolve_addr!($name, $addr);
                 let $func: unsafe extern "cdecl" fn($($arg_ty),*) -> $ret = ::core::mem::transmute(func_addr);
 
                 $call_block
@@ -86,7 +83,7 @@ macro_rules! api {
     ) => {
         pub fn $name($($outer_arg: $outer_ty),*) -> $ret {
             unsafe {
-                let func_addr = $crate::resolve_addr(stringify!($name), $addr);
+                let func_addr = $crate::resolve_addr!($name, $addr);
                 let $func: unsafe extern "cdecl" fn($($arg_ty),*, ...) -> $ret = ::core::mem::transmute(func_addr);
 
                 $call_block
@@ -96,17 +93,22 @@ macro_rules! api {
 
 }
 
-pub fn resolve_addr(name: &str, addr: usize) -> usize {
-    unsafe {
-        let Ok(base) = GetModuleHandleA(PCSTR(::core::ptr::null())) else {
+#[macro_export]
+macro_rules! resolve_addr {
+    (
+        $name:ident,
+        $addr:expr
+    ) => {{
+        let Ok(base) = windows::Win32::System::LibraryLoader::GetModuleHandleA(
+            windows::core::PCSTR(::core::ptr::null())
+        ) else {
             panic!(
                 "Failed to get base handle for {} (0x{:X})",
-                name,
-                addr
+                stringify!($name),
+                $addr
             );
         };
-
-        let base = base.0 as usize;
-        base + addr
-    }
+        
+        (base.0 as usize) + $addr
+    }};
 }
