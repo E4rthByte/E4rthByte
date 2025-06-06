@@ -1,6 +1,6 @@
 use rbxapi::api::{print, rbx_getscheduler};
 
-use std::{panic, thread};
+use std::panic;
 use tokio::runtime::Builder;
 use tokio::time::{sleep, Duration};
 use panichook::messagebox_panic_hook;
@@ -8,12 +8,12 @@ use panichook::messagebox_panic_hook;
 async fn main() {
     print(0, "FEMBOY GANG");
     
-    // loop {
+    loop {
         let scheduler = rbx_getscheduler();
         print(0, scheduler.to_string().as_str());
         
-        // sleep(Duration::from_millis(500)).await;
-    // }
+        sleep(Duration::from_millis(500)).await;
+    }
 }
 
 #[unsafe(no_mangle)]
