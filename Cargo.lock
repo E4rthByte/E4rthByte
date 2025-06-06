@@ -15,6 +15,7 @@ dependencies = [
 name = "e4rthbyte"
 version = "0.1.0"
 dependencies = [
+ "panichook",
  "rbxapi",
 ]
 
@@ -42,6 +43,13 @@ dependencies = [
 [[package]]
 name = "offsets"
 version = "0.1.0"
+
+[[package]]
+name = "panichook"
+version = "0.1.0"
+dependencies = [
+ "windows",
+]
 
 [[package]]
 name = "proc-macro2"

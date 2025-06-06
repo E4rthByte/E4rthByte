@@ -8,3 +8,4 @@ crate-type = ["cdylib"]
 
 [dependencies]
 rbxapi = { path = "rbxapi" }
+panichook = { path = "panichook" }
