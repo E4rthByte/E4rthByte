@@ -1,5 +1,8 @@
+#![feature(backtrace_frames)]
+
+use std::backtrace::Backtrace;
 use std::ffi::CString;
-use std::panic::{Location, PanicHookInfo};
+use std::panic::PanicHookInfo;
 use windows::core::PCSTR;
 use windows::Win32::UI::WindowsAndMessaging::{MessageBoxA, MB_ICONERROR, MB_OK};
 
@@ -8,7 +11,7 @@ pub fn messagebox_panic_hook(info: &PanicHookInfo<'_>) {
         None => "<unknown location>".to_string(),
         Some(location) => format!("{}:{}", location.file(), location.line()),
     };
-
+    
     let message = if let Some(s) = info.payload().downcast_ref::<&str>() {
         *s
     } else if let Some(s) = info.payload().downcast_ref::<String>() {
@@ -19,9 +22,11 @@ pub fn messagebox_panic_hook(info: &PanicHookInfo<'_>) {
     
     let message = format!(
         "{}\n\n\
-        Location: \n{}",
+        Location: \n{}\n\n\
+        Backtrace: \n{}",
         message,
-        location
+        location,
+        Backtrace::force_capture()
     );
     
     let message = CString::new(message).unwrap();
