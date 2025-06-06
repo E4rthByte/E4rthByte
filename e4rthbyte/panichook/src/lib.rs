@@ -1,12 +1,13 @@
 use std::ffi::CString;
-use std::panic::PanicHookInfo;
+use std::panic::{Location, PanicHookInfo};
 use windows::core::PCSTR;
 use windows::Win32::UI::WindowsAndMessaging::{MessageBoxA, MB_ICONERROR, MB_OK};
 
 pub fn messagebox_panic_hook(info: &PanicHookInfo<'_>) {
-    let location = info.location()
-        .map(|l| format!("{}:{}", l.file(), l.line()))
-        .unwrap_or_else(|| "<unknown location>".to_string());
+    let location = match info.location() {
+        None => "<unknown location>".to_string(),
+        Some(location) => format!("{}:{}", location.file(), location.line()),
+    };
 
     let message = if let Some(s) = info.payload().downcast_ref::<&str>() {
         *s
