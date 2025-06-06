@@ -7,7 +7,7 @@ edition = "2024"
 crate-type = ["cdylib"]
 
 [dependencies]
-tokio = { version = "1.45.1", features = ["time", "rt"] }
+smol = "2.0.2"
 rbxapi = { path = "rbxapi" }
 luau = { path = "luau" }
 panichook = { path = "panichook" }
