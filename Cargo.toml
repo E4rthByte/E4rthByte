@@ -8,3 +8,20 @@ members = [
     "e4rthbyte/rbxapi",
     "e4rthbyte/panichook",
 ]
+
+[profile.release]
+lto = true
+incremental = false
+opt-level = 3
+debug = false
+strip = true
+codegen-units = 1
+
+[profile.dev]
+opt-level = 0
+debug = true
+debug-assertions = true
+incremental = true
+codegen-units = 32
+overflow-checks = true
+panic = "unwind"
