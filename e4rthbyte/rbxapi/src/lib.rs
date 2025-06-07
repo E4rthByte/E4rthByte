@@ -2,7 +2,7 @@ pub mod api;
 
 /// Creating bindings to Roblox functions through a Rust wrapper.
 ///
-/// #### Simple Function
+/// # Simple Function
 /// ```_rust
 /// use rbxapi::api;
 /// use offsets::roblox::{GETTASKSCHEDULER_ADDR, PRINT_ADDR};
@@ -16,7 +16,7 @@ pub mod api;
 /// ```
 /// This will create a Rust function named `rbx_getscheduler`, which takes no arguments and returns a `c_double`.
 ///
-/// #### Function with Data Transformation
+/// # Function with Data Transformation
 /// Sometimes, you need different input parameters in the Rust function than those in the actual C function.
 /// For this, the `api!` macro accepts two more arguments: `signature` and `call`.
 /// ```_rust
@@ -93,6 +93,24 @@ macro_rules! api {
 
 }
 
+/// Resolves a runtime absolute address by adding a relative offset to the current module base.
+///
+/// # Parameters
+/// - `$name`: An identifier used only for naming/debug/logging in case of failure.
+/// - `$addr`: A relative address (offset) from the module base.
+///
+/// # Returns
+/// The absolute address as `usize`.
+///
+/// # Panics
+/// Panics if the module handle (base address) cannot be obtained.
+///
+/// # Example
+/// ```
+/// use rbxapi::resolve_addr;
+/// 
+/// let address = resolve_addr!(some_function, 0x1A2B3C);
+/// ```
 #[macro_export]
 macro_rules! resolve_addr {
     (
