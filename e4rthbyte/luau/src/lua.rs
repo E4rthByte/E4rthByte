@@ -1,9 +1,3 @@
-use std::ffi::CString;
-use std::mem::zeroed;
-use std::ptr::null_mut;
-use core::ffi::c_int;
-use crate::raw::lua::{lua_State, lua_pushcclosurek, lua_setfield, LUA_GLOBALSINDEX};
-
 #[macro_export]
 macro_rules! lua_pushcfunction {
     ($state:expr, $func:expr) => {
@@ -11,7 +5,7 @@ macro_rules! lua_pushcfunction {
             $crate::raw::lua::lua_pushcclosurek(
                 $state,
                 Some(lua_cfunction!($func)),
-                null_mut(),
+                core::ptr::null_mut(),
                 0,
                 None
             )
